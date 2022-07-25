@@ -1,4 +1,4 @@
-import "./App.css";
+import "./index.css";
 import AppClima from "./components/AppClima";
 
 function App(): JSX.Element {
