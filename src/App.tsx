@@ -1,17 +1,17 @@
 import { ReactElement } from "react";
-import { ClimaProvider } from "./context/ClimaProvider";
-import AppClima from "./components/AppClima";
+import { WeatherProvider } from "./context/WeatherProvider";
+import AppWeather from "./components/AppWeather";
 import "./index.css";
 
 function App(): ReactElement {
   return (
     <>
-      <ClimaProvider>
+      <WeatherProvider>
         <header>
           <h1>Buscador de Clima</h1>
         </header>
-        <AppClima />;
-      </ClimaProvider>
+        <AppWeather />;
+      </WeatherProvider>
     </>
   );
 }

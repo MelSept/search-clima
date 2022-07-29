@@ -14,9 +14,9 @@ type Props = {
   children?: ReactNode;
 };
 
-const ClimaContext = createContext<DatesContext | null>(null);
+const WeatherContext = createContext<DatesContext | null>(null);
 
-const ClimaProvider = ({ children }: Props) => {
+const WeatherProvider = ({ children }: Props) => {
   const [search, setSearch] = useState<TSearch>({ city: "", country: "" });
 
   const dataSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,16 +27,16 @@ const ClimaProvider = ({ children }: Props) => {
   };
 
   return (
-    <ClimaContext.Provider
+    <WeatherContext.Provider
       value={{
         search,
         dataSearch,
       }}
     >
       {children}
-    </ClimaContext.Provider>
+    </WeatherContext.Provider>
   );
 };
 
-export { ClimaProvider };
-export default ClimaContext;
+export { WeatherProvider };
+export default WeatherContext;

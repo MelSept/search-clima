@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import Form from "./Form";
 
-const AppClima = (): ReactElement => {
+const AppWeather = (): ReactElement => {
   return (
     <>
       <main className="dos-columnas">
@@ -11,4 +11,4 @@ const AppClima = (): ReactElement => {
   );
 };
 
-export default AppClima;
+export default AppWeather;
