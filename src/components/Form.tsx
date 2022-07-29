@@ -1,6 +1,9 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
+import useClima from "../hooks/useClima";
 
 const Form = (): ReactElement => {
+  const { search, dataSearch } = useClima();
+
   return (
     <div className="contenedor">
       <form>
