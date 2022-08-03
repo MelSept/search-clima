@@ -1,4 +1,5 @@
 import { useState, createContext, ChangeEvent, ReactNode } from "react";
+import axios from "axios";
 
 type TSearch = { city: string; country: string };
 
@@ -22,6 +23,7 @@ const WeatherContext = createContext<DatesContext | null>(null);
 
 const WeatherProvider = ({ children }: Props) => {
   const [search, setSearch] = useState<TSearch>({ city: "", country: "" });
+  const [result, setResult] = useState({});
 
   const dataSearch = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setSearch({
@@ -32,8 +34,25 @@ const WeatherProvider = ({ children }: Props) => {
 
   //Typescript pide que le volvamos a decir de que tipo es data
 
-  const checkWeather = (data: TSearch) => {
-    console.log(data);
+  const checkWeather = async (searchData: TSearch) => {
+    try {
+      // destructuring
+      const { city, country } = searchData;
+
+      const appId = process.env.REACT_APP_API_KEY;
+
+      // el axios entre {} lleva data por defecto ya que viene con la libreria
+
+      const url = `http://api.openweathermap.org/geo/1.0/direct?q=${city},${country}&limit=1&appid=${appId}`;
+      const { data } = await axios(url);
+      const { lat, lon } = data[0];
+
+      const urlWeather = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit={limit}&appid=${appId}`;
+      const { data: weather } = await axios(urlWeather);
+      setResult(weather);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
