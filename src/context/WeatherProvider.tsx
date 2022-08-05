@@ -2,6 +2,10 @@ import { useState, createContext, ChangeEvent, ReactNode } from "react";
 import axios from "axios";
 
 type TSearch = { city: string; country: string };
+type TWeather = { name: string };
+type Props = {
+  children?: ReactNode;
+};
 
 // Todo lo que yo quiero utilizar en el contexto debe ir  en su interface y
 // en el value del Context.provider
@@ -11,19 +15,16 @@ type TSearch = { city: string; country: string };
 
 export interface DatesContext {
   search: TSearch;
+  result: TWeather;
   dataSearch: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   checkWeather: (data: TSearch) => void;
 }
-
-type Props = {
-  children?: ReactNode;
-};
 
 const WeatherContext = createContext<DatesContext | null>(null);
 
 const WeatherProvider = ({ children }: Props) => {
   const [search, setSearch] = useState<TSearch>({ city: "", country: "" });
-  const [result, setResult] = useState({});
+  const [result, setResult] = useState<TWeather>({ name: "" }); //Respuesta = lista de objetos
 
   const dataSearch = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setSearch({
@@ -47,9 +48,9 @@ const WeatherProvider = ({ children }: Props) => {
       const { data } = await axios(url);
       const { lat, lon } = data[0];
 
-      const urlWeather = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit={limit}&appid=${appId}`;
+      const urlWeather = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${appId}`;
       const { data: weather } = await axios(urlWeather);
-      setResult(weather);
+      setResult(weather[0]); // le pasamos posicion 0 para que traiga el primer elemento
     } catch (error) {
       console.log(error);
     }
@@ -59,6 +60,7 @@ const WeatherProvider = ({ children }: Props) => {
     <WeatherContext.Provider
       value={{
         search,
+        result,
         dataSearch,
         checkWeather,
       }}
