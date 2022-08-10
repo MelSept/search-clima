@@ -2,7 +2,15 @@ import { useState, createContext, ChangeEvent, ReactNode } from "react";
 import axios from "axios";
 
 type TSearch = { city: string; country: string };
-type TWeather = { name: string };
+//le pasamos los datos que va a necesitar consultar nuestra App
+type TWeather = {
+  name: string;
+  main: {
+    temp: number;
+    temp_min: number;
+    temp_max: number;
+  };
+};
 type Props = {
   children?: ReactNode;
 };
@@ -24,7 +32,14 @@ const WeatherContext = createContext<DatesContext | null>(null);
 
 const WeatherProvider = ({ children }: Props) => {
   const [search, setSearch] = useState<TSearch>({ city: "", country: "" });
-  const [result, setResult] = useState<TWeather>({ name: "" }); //Respuesta = lista de objetos
+  const [result, setResult] = useState<TWeather>({
+    name: "",
+    main: {
+      temp: 0,
+      temp_min: 0,
+      temp_max: 0,
+    },
+  }); //Respuesta = objetos
 
   const dataSearch = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setSearch({
@@ -42,15 +57,20 @@ const WeatherProvider = ({ children }: Props) => {
 
       const appId = process.env.REACT_APP_API_KEY;
 
-      // el axios entre {} lleva data por defecto ya que viene con la libreria
+      // axios te devuelve la informacion que trae de una Api dentro de una variable llamada data. En este
+      // ejemplo destructuramos la variable data
+
+      console.log("llamando a la api");
 
       const url = `http://api.openweathermap.org/geo/1.0/direct?q=${city},${country}&limit=1&appid=${appId}`;
       const { data } = await axios(url);
       const { lat, lon } = data[0];
+      console.log(data);
 
-      const urlWeather = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${appId}`;
+      const urlWeather = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${appId}`;
       const { data: weather } = await axios(urlWeather);
-      setResult(weather[0]); // le pasamos posicion 0 para que traiga el primer elemento
+      console.log("papita", weather);
+      setResult(weather);
     } catch (error) {
       console.log(error);
     }

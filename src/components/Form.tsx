@@ -1,21 +1,23 @@
-import { ReactElement } from "react";
+import { ReactElement, FormEvent } from "react";
 import { useState } from "react";
 import useWeather from "../hooks/useWeather";
 
 const Form = (): ReactElement => {
   const [alert, setAlert] = useState("");
-  const { search, dataSearch } = useWeather();
+  const { search, dataSearch, checkWeather } = useWeather();
 
   const { city, country } = search;
 
   //utilizamos preventDefault para que no nos recarge la pagina entera y nos resetee los estados
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    //
 
     if (Object.values(search).includes("")) {
       setAlert("Todos los campos son obligatorios");
       return;
     }
+    checkWeather(search);
   };
 
   return (
